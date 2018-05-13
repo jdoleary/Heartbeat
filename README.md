@@ -2,15 +2,22 @@
 A golang http healthchecker
 
 # Usage
-Run the executable with a mandatory argument specifying the path to a newline-separated file of sites to check.  For example:
+Run the executable with a mandatory argument specifying the path 
+of the saved data containing urls to check.  For example:
 
-`$ ./heartbeat ./conf/sites.txt`
+`$ ./heartbeat ./data/heartbeats.json`
 
-sites.txt example
+heartbeats.json example
 
 `
-https://jdoleary.me
-http://example.com
-http://example.com/specificRoute
-http://subdomain.example.com
+{
+    "records":[   
+        {
+            "url":"https://jdoleary.me"
+        },
+        {
+            "url":"https://jdoleary.me/other"
+        }
+    ]
+}
 `

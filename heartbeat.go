@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"time"
 )
 
 func check(e error) {
@@ -15,31 +17,40 @@ func check(e error) {
 }
 
 func main() {
-	dat, err := ioutil.ReadFile("./data/heartbeats.json")
+
+	// Read data file that specifies which sites to check:
+	dataFilePath := os.Args[1]
+	if dataFilePath == "" {
+		log.Fatal("Configuration file path not specified in command line arguments")
+	}
+	data, err := loadData(dataFilePath)
 	check(err)
-	fmt.Printf("%s\n", dat)
-	rec := records{}
-	json.Unmarshal(dat, &rec)
-	fmt.Println(rec)
+	stethoscope(&data)
+	fmt.Println(data)
 
-	// // Read conf file that specifies which sites to check:
-	// confFilePath := os.Args[1]
-	// if confFilePath == "" {
-	// 	log.Fatal("Configuration file path not specified in command line arguments")
-	// }
-	// fmt.Printf("|||Heartbeat|||\n%s conf file loaded\n", confFilePath)
-	// dat, err := ioutil.ReadFile(confFilePath)
-	// check(err)
-	// fileData := string(dat[:])
-	// // Remove \r
-	// fileData = strings.Replace(fileData, "\r", "", -1)
-	// // Split by newline
-	// sites := strings.Split(fileData, "\n")
+	jsonData, err := json.Marshal(data)
+	check(err)
 
-	// // Loop and check sites:
-	// for _, el := range sites {
-	// 	checkHeartbeat(el)
-	// }
+	// Save data
+	err = ioutil.WriteFile(dataFilePath, jsonData, 0644)
+	check(err)
+}
+
+// stethoscope checks the heartbeats of each site in the records object
+func stethoscope(data *records) {
+	for i := range data.Records {
+		// Get mem address of each record
+		rec := &data.Records[i]
+		// Check the heartbeat
+		code, err := checkHeartbeat(rec.URL)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		// Save data
+		rec.Heartbeats = append(rec.Heartbeats, heartbeat{time.Now().String(), code})
+	}
+
 }
 
 // checkHeartbeat calls http.Get on url and returns the StatusCode and a possible error
@@ -47,7 +58,6 @@ func checkHeartbeat(url string) (int, error) {
 	resp, err := http.Get(url)
 	fmt.Printf("Checking %s: ", url)
 	if err != nil {
-		fmt.Println(err)
 		return 0, err
 	}
 	fmt.Printf("%s has code %s\n", url, resp.Status)
@@ -55,12 +65,22 @@ func checkHeartbeat(url string) (int, error) {
 
 }
 
+// loadData loads the save json data used to keep heartbeat records
+func loadData(path string) (rec records, err error) {
+	dat, err := ioutil.ReadFile(path)
+	check(err)
+	rec = records{}
+	json.Unmarshal(dat, &rec)
+	fmt.Println("Data loaded")
+	return
+}
+
 type heartbeat struct {
 	Date       string `json:"date"`
 	StatusCode int    `json:"StatusCode"`
 }
 type record struct {
-	URL        string      `json:url`
+	URL        string      `json:"url"`
 	Heartbeats []heartbeat `json:"heartbeats"`
 }
 

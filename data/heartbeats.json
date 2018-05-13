@@ -1,18 +1,1 @@
-{
-    "records":[   
-        {
-            "url":"https://jdoleary.me",
-            "heartbeats":[
-                {"date":"today", "StatusCode":200},
-                {"date":"tomorrow", "StatusCode":500}
-            ]
-        },
-        {
-            "url":"https://jdoleary.me/potion",
-            "heartbeats":[
-                {"date":"today", "StatusCode":301},
-                {"date":"tomorrow", "StatusCode":404}
-            ]
-        }
-    ]
-}
+{"records":[{"url":"https://jdoleary.me","heartbeats":[{"date":"2018-05-13 16:28:04.9387963 -0400 EDT m=+0.135019701","StatusCode":200}]},{"url":"https://jdoleary.me/potion","heartbeats":[{"date":"2018-05-13 16:27:37.0164273 -0400 EDT m=+0.410219501","StatusCode":200},{"date":"2018-05-13 16:28:05.0838506 -0400 EDT m=+0.280074001","StatusCode":200}]}]}
