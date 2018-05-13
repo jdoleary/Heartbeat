@@ -3,13 +3,23 @@ A http healthchecker written in Go
 
 # Usage
 Run the executable with a mandatory argument specifying the path 
-of the saved data containing urls to check.  For example:
+of the Heartbeat files.
 
-`$ ./heartbeat ./data/heartbeats.json`
+```
+~/HeartbeatData
+    # Required file containing info on which urls to test
+    /data.json  
+    # Pretty print info about the tests (created automatically)
+    /pretty.txt 
+```
 
-heartbeats.json example
+For example:
 
-`
+`$ ./heartbeat ~/HeartbeatData`
+
+data.json example
+
+```
 {
     "records":[   
         {
@@ -20,7 +30,7 @@ heartbeats.json example
         }
     ]
 }
-`
+```
 
 It will overwite that file with heartbeat information.
 
@@ -31,7 +41,7 @@ Setup crontab as follows (if you have mail setup on your server)
 
 `
 # Run heartbeat every hour
-0 * * * * Heartbeat PATH_TO_JSON_FILE
+0 * * * * Heartbeat PATH_TO_DATA_DIR
 # Email heartbeat results every day at 1am
-0 1 * * * mail -s 'Heartbeat' YOUREMAIL@gmail.com < PATH_TO_JSON_FILE
+0 1 * * * mail -s 'Heartbeat' YOUREMAIL@gmail.com < PATH_TO_DATA_DIR/pretty.txt
 `
