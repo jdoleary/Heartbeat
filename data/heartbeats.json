@@ -1,0 +1,18 @@
+{
+    "records":[   
+        {
+            "url":"https://jdoleary.me",
+            "heartbeats":[
+                {"date":"today", "StatusCode":200},
+                {"date":"tomorrow", "StatusCode":500}
+            ]
+        },
+        {
+            "url":"https://jdoleary.me/potion",
+            "heartbeats":[
+                {"date":"today", "StatusCode":301},
+                {"date":"tomorrow", "StatusCode":404}
+            ]
+        }
+    ]
+}
