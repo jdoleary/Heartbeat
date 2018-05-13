@@ -19,9 +19,12 @@ func check(e error) {
 func main() {
 
 	// Read data file that specifies which sites to check:
+	if len(os.Args) != 2 {
+		log.Fatal("ERR: Configuration file path not specified in command line arguments")
+	}
 	dataFilePath := os.Args[1]
 	if dataFilePath == "" {
-		log.Fatal("Configuration file path not specified in command line arguments")
+		log.Fatal("ERR: Configuration file path not specified in command line arguments")
 	}
 	data, err := loadData(dataFilePath)
 	check(err)
