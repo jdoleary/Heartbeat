@@ -87,6 +87,10 @@ func stethoscope(data *records) {
 		}
 		// Save data
 		rec.Heartbeats = append(rec.Heartbeats, heartbeat{time.Now().Format("Mon Jan _2 2006 15:04:05"), code})
+		// Limit heartbeat records
+		if len(rec.Heartbeats) > heartbeatsMaxLength {
+			rec.Heartbeats = rec.Heartbeats[len(rec.Heartbeats)-heartbeatsMaxLength:]
+		}
 	}
 
 }
@@ -125,3 +129,5 @@ type record struct {
 type records struct {
 	Records []record `json:"records"`
 }
+
+var heartbeatsMaxLength = 24
